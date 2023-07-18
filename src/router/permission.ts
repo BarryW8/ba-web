@@ -6,7 +6,6 @@ import { whiteList } from "@/config/white-list"
 import { getToken } from "@/utils/cache/cookies"
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"
-import { constantRoutes } from "@/router"
 
 NProgress.configure({ showSpinner: false })
 
@@ -37,16 +36,7 @@ router.beforeEach(async (to, _from, next) => {
       if (!userStore.userInfo) {
         try {
           await userStore.getInfo()
-          const accessRoutes = permissionStore.generateRoutes()
-
-          // dynamically add accessible routes
-          router.options.routes = [...constantRoutes, ...accessRoutes]
-          // router.addRoutes(accessRoutes)
-          accessRoutes.forEach((item) => router.addRoute(item))
-
-          // 框架原因，通配符路由只能添加到最后，不然动态路由刷新会跳
-          // router.options.routes.push({ path: "*", redirect: "/404", hidden: true })
-          // router.addRoute({ path: "*", redirect: "/404", hidden: true })
+          permissionStore.generateRoutes()
 
           // 设置 replace: true, 因此导航将不会留下历史记录
           next({ ...to, replace: true })

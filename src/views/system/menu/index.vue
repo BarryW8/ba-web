@@ -17,7 +17,7 @@
     <el-card shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button type="success" icon="Plus" @click="handleSave()">新增</el-button>
+          <el-button type="success" icon="Plus" @click="handleAdd">新增</el-button>
           <el-button type="info" icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
         </div>
         <div>
@@ -55,7 +55,7 @@
           <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
           <el-table-column fixed="right" label="操作" width="200" align="center">
             <template #default="scope">
-              <el-button type="primary" plain size="small" @click.stop="handleSave(scope.row)">修改</el-button>
+              <el-button type="primary" plain size="small" @click.stop="handleEdit(scope.row)">修改</el-button>
               <el-button
                 v-show="scope.row.menuType === 'C'"
                 type="success"
@@ -159,15 +159,17 @@ const resetSearch = () => {
   searchRef.value.resetFields()
 }
 
-/** 新增 编辑 */
-const handleSave = (row?: any) => {
-  if (!currentRow.value) {
-    currentRow.value = row
-  }
+/** 新增 */
+const handleAdd = () => {
   saveVisible.value = true
-  console.log(row)
-  if (row) opt.value = "edit"
-  else opt.value = "add"
+  opt.value = "add"
+}
+
+/** 编辑 */
+const handleEdit = (row: any) => {
+  currentRow.value = row
+  saveVisible.value = true
+  opt.value = "edit"
 }
 
 /** 授权按钮 */
