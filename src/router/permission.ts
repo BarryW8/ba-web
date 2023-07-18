@@ -12,6 +12,8 @@ NProgress.configure({ showSpinner: false })
 router.beforeEach(async (to, _from, next) => {
   const userStore = useUserStoreHook()
   const permissionStore = usePermissionStoreHook()
+
+  // 拦截当前路由，缓存当前页面所有权限按钮
   const { menu } = to.meta
   if (menu && menu instanceof Array && menu.length > 0) {
     permissionStore.perms = menu

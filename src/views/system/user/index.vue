@@ -17,9 +17,11 @@
     <el-card shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
+          <el-button v-permission="1" type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
           <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button>
-          <el-button type="primary" icon="Avatar" :disabled="isSingle" @click="handleAuthRole">授权角色</el-button>
+          <el-button v-permission="4" type="primary" icon="Avatar" :disabled="isSingle" @click="handleAuthRole"
+            >授权角色</el-button
+          >
         </div>
         <div>
           <el-tooltip placement="top" content="隐藏搜索">
@@ -48,9 +50,9 @@
               <el-tag v-if="scope.row.roleName" type="warning" effect="plain">{{ scope.row.roleName }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="telephone" label="手机号" align="center" />
-          <el-table-column prop="email" label="邮箱" align="center" />
-          <el-table-column prop="status" label="状态" align="center">
+          <el-table-column prop="telephone" label="手机号" align="center" show-overflow-tooltip />
+          <el-table-column prop="email" label="邮箱" align="center" show-overflow-tooltip />
+          <el-table-column prop="status" label="状态" width="100" align="center">
             <template #default="scope">
               <el-tag v-if="scope.row.userStatus" type="danger" effect="dark">停用</el-tag>
               <el-tag v-else type="success" effect="dark">正常</el-tag>
@@ -59,8 +61,12 @@
           <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
-              <el-button type="primary" plain size="small" @click.stop="handleEdit(scope.row)">修改</el-button>
-              <el-button type="danger" plain size="small" @click.stop="handleDelete(scope.row)">删除</el-button>
+              <el-button v-permission="2" type="primary" plain size="small" @click.stop="handleEdit(scope.row)"
+                >修改</el-button
+              >
+              <el-button v-permission="3" type="danger" plain size="small" @click.stop="handleDelete(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>

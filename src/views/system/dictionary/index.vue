@@ -17,7 +17,7 @@
     <el-card shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button type="success" icon="Plus" @click="handleAdd">新增</el-button>
+          <el-button v-permission="1" type="success" icon="Plus" @click="handleAdd">新增</el-button>
           <el-button type="info" icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
         </div>
         <div>
@@ -44,11 +44,16 @@
           <el-table-column prop="code" label="字典编号" align="center" />
           <el-table-column prop="name" label="字典名称" align="center" />
           <el-table-column prop="parentCode" label="上级编号" align="center" />
+          <el-table-column prop="orderBy" label="排序" align="center" />
           <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
-          <el-table-column fixed="right" label="操作" width="150" align="center">
+          <el-table-column v-permission="['2', '3']" fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
-              <el-button type="primary" plain size="small" @click.stop="handleEdit(scope.row)">修改</el-button>
-              <el-button type="danger" plain size="small" @click.stop="handleDelete(scope.row)">删除</el-button>
+              <el-button v-permission="2" type="primary" plain size="small" @click.stop="handleEdit(scope.row)"
+                >修改</el-button
+              >
+              <el-button v-permission="3" type="danger" plain size="small" @click.stop="handleDelete(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>

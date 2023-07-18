@@ -17,9 +17,9 @@
     <el-card shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
+          <el-button v-permission="1" type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
           <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button>
-          <el-button type="primary" icon="Avatar" :disabled="isSingle">授权用户</el-button>
+          <el-button v-permission="4" type="primary" icon="Avatar" :disabled="isSingle">授权用户</el-button>
         </div>
         <div>
           <el-tooltip placement="top" content="隐藏搜索">
@@ -54,8 +54,12 @@
           <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
-              <el-button type="primary" plain size="small" @click.stop="handleEdit(scope.row)">修改</el-button>
-              <el-button type="danger" plain size="small" @click.stop="handleDelete(scope.row)">删除</el-button>
+              <el-button v-permission="2" type="primary" plain size="small" @click.stop="handleEdit(scope.row)"
+                >修改</el-button
+              >
+              <el-button v-permission="3" type="danger" plain size="small" @click.stop="handleDelete(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>

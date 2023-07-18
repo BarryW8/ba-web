@@ -1,17 +1,26 @@
 import { type Directive } from "vue"
-import { useUserStoreHook } from "@/store/modules/user"
+import { usePermissionStoreHook } from "@/store/modules/permission"
 
-/** 权限指令，和权限判断函数 checkPermission 功能类似 */
+/**
+ * 按钮权限指令
+ * @binding.value 按钮权限编码
+ */
 export const permission: Directive = {
   mounted(el, binding) {
-    const { value: permissionRoles } = binding
-    const { roles } = useUserStoreHook()
-    if (Array.isArray(permissionRoles) && permissionRoles.length > 0) {
-      const hasPermission = roles.some((role) => permissionRoles.includes(role))
-      // hasPermission || (el.style.display = "none") // 隐藏
-      hasPermission || el.parentNode?.removeChild(el) // 销毁
-    } else {
-      throw new Error(`need roles! Like v-permission="['admin','editor']"`)
-    }
+    const { value } = binding
+    const perms = usePermissionStoreHook().perms
+
+    const hasPermission = perms.some((btn) => {
+      if (value instanceof Array) {
+        console.log("permission----------", value)
+        console.log("permission----------", btn)
+        console.log("permission----------", typeof btn)
+        console.log("permission----------", value.includes(btn))
+        return value.includes(btn)
+      } else return value == btn
+    })
+
+    if (!hasPermission) el.parentNode && el.parentNode.removeChild(el)
+    // if (buttonPermission) if (!hasPermission) el.parentNode && el.parentNode.removeChild(el)
   }
 }

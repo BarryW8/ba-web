@@ -19,6 +19,7 @@
         </el-form-item>
         <el-form-item label="上级字典">
           <el-tree-select
+            ref="dictRef"
             v-model="formData.parentId"
             :data="dictOption"
             :props="{ value: 'id', label: 'name', children: 'children' }"
@@ -26,12 +27,16 @@
             placeholder="选择上级菜单"
             check-strictly
             style="width: 100%"
+            @node-click="handleNodeClick"
           />
         </el-form-item>
         <el-form-item prop="status" label="状态">
           <el-select v-model="formData.status" placeholder="请输入" style="width: 100%">
             <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="显示排序" prop="orderBy">
+          <el-input-number v-model="formData.orderBy" controls-position="right" :min="0" style="width: 100%" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -68,6 +73,7 @@ const title = props.params.data && props.params.data.id ? "编辑" : "新增"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 字典树
+const dictRef = ref<any>(null)
 const dictOption = ref<any[]>([])
 // 表单
 const formRef = ref<any>(null)
@@ -81,8 +87,16 @@ const formData = reactive<any>({
 const formRules: any = reactive({
   code: [{ required: true, trigger: "blur", message: "不能为空" }],
   name: [{ required: true, trigger: "blur", message: "不能为空" }],
-  status: [{ required: true, trigger: "change", message: "不能为空" }]
+  status: [{ required: true, trigger: "change", message: "不能为空" }],
+  orderBy: [{ required: true, trigger: "blur", message: "显示排序不能为空" }]
 })
+
+// 字典树操作
+/** 选中树节点 */
+const handleNodeClick = () => {
+  console.log("handleNodeClick---------", dictRef.value.getCurrentNode())
+  formData.parentCode = dictRef.value.getCurrentNode()?.code
+}
 
 /** 查询字典树 */
 const findTree = () => {
@@ -134,6 +148,7 @@ findTree()
 if (props.params.opt === "add") {
   if (record && record.id) {
     formData.parentId = record.id
+    formData.parentCode = record.code
   }
 } else if (props.params.opt === "edit") {
   findById()
