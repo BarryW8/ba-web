@@ -18,7 +18,7 @@
         </el-form-item>
         <el-form-item label="上级字典">
           <el-tree-select
-            ref="dictRef"
+            ref="treeSelectRef"
             v-model="formData.parentId"
             :data="dictOption"
             :props="{ value: 'id', label: 'name', children: 'children' }"
@@ -72,7 +72,7 @@ const title = props.params.data && props.params.data.id ? "编辑" : "新增"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 字典树
-const dictRef = ref<any>(null)
+const treeSelectRef = ref<any>(null)
 const dictOption = ref<any[]>([])
 // 表单
 const formRef = ref<any>(null)
@@ -93,8 +93,8 @@ const formRules: any = reactive({
 // 字典树操作
 /** 选中树节点 */
 const handleNodeClick = () => {
-  console.log("handleNodeClick---------", dictRef.value.getCurrentNode())
-  formData.parentCode = dictRef.value.getCurrentNode()?.code
+  console.log("handleNodeClick---------", treeSelectRef.value.getCurrentNode())
+  formData.parentCode = treeSelectRef.value.getCurrentNode()?.code
 }
 
 /** 查询字典树 */

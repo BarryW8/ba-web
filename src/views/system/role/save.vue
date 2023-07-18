@@ -33,7 +33,7 @@
             :data="menuOption"
             show-checkbox
             :default-checked-keys="permList"
-            node-key="menuId"
+            node-key="treeId"
             :check-strictly="!menuCheckStrictly"
             empty-text="加载中，请稍候"
             :props="{ label: 'menuName', children: 'children' }"
@@ -99,7 +99,7 @@ const formRules = reactive({
 const handleCheckedTreeExpand = (value: any) => {
   const treeList = menuOption.value
   for (let i = 0; i < treeList.length; i++) {
-    treeRef.value.store.nodesMap[treeList[i].menuId].expanded = value
+    treeRef.value.store.nodesMap[treeList[i].treeId].expanded = value
   }
 }
 /** 树权限（全选/全不选） */
