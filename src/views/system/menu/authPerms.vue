@@ -47,8 +47,7 @@ const { proxy } = getCurrentInstance() as any
 const props = withDefaults(
   defineProps<{
     show: boolean
-    data: any
-    opt?: string
+    params: any
   }>(),
   {
     show: false
@@ -62,6 +61,7 @@ const emit = defineEmits<{
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
 const title = "授权角色"
+const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 const dataList = ref<any[]>([])
 // 穿梭框
@@ -99,7 +99,7 @@ const dictOptions = () => {
 
 /** 查询详情 */
 const findById = () => {
-  findByIdApi({ modelId: props.data.id }).then((res) => {
+  findByIdApi({ modelId: record.id }).then((res) => {
     Object.assign(formData, res.data)
   })
 }
@@ -123,7 +123,7 @@ const hide = () => emit("hide")
 /** 初始化 */
 console.log("###初始化")
 dictOptions()
-if (props.data && props.data.id) {
+if (record && record.id) {
   findById()
 }
 </script>

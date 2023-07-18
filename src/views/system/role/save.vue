@@ -6,7 +6,7 @@
       :title="title"
       :close-on-click-modal="false"
       draggable
-      width="700"
+      width="500"
       @close="hide"
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px">
@@ -55,8 +55,7 @@ import { findTreePermsApi } from "@/api/system/menu"
 const props = withDefaults(
   defineProps<{
     show: boolean
-    data: any
-    opt?: string
+    params: any
   }>(),
   {
     show: false
@@ -71,8 +70,8 @@ const { proxy } = getCurrentInstance() as any
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = props.data && props.data.id ? "编辑" : "新增"
-const record = reactive(props.data)
+const title = props.params.data && props.params.data.id ? "编辑" : "新增"
+const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 菜单树
 const treeRef = ref<any>(null)
@@ -84,7 +83,6 @@ const menuCheckStrictly = ref(true)
 // 表单
 const formRef = ref<any>(null)
 const formData = reactive<any>({
-  id: record.id,
   roleCode: "",
   roleName: "",
   roleStatus: 0,

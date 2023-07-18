@@ -6,8 +6,7 @@ import { usePagination } from "@/hooks/usePagination"
 const props = withDefaults(
   defineProps<{
     show: boolean
-    data: any
-    opt?: string
+    params: any
   }>(),
   {
     show: false
@@ -25,6 +24,7 @@ const { paginationData } = usePagination()
 const dialogVisible = ref<boolean>(props.show)
 const loading = ref<boolean>(false)
 const title = "授权角色"
+const record = reactive(props.params.data)
 const dataList = ref<any[]>([])
 const tableRef = ref<any>(null)
 const selectList = ref<any>([])
@@ -94,7 +94,7 @@ const handleSelectAll = (selection: any[]) => {
 
 /** 查询已勾选记录 */
 const findUserRole = () => {
-  findUserRoleApi({ modelId: props.data.id }).then((res: any) => {
+  findUserRoleApi({ modelId: record.id }).then((res: any) => {
     if (res.data) {
       selectList.value.push(res.data)
     }
@@ -135,7 +135,7 @@ const save = () => {
   console.log("-------selectIds", selectIds)
   loading.value = true
   saveUserRoleApi({
-    userId: props.data.id,
+    userId: record.id,
     roleId: selectIds.value[0]
   })
     .then(() => {

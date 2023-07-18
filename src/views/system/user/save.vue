@@ -62,8 +62,7 @@ import { saveApi, findByIdApi } from "@/api/system/user"
 const props = withDefaults(
   defineProps<{
     show: boolean
-    data: any
-    opt?: string
+    params: any
   }>(),
   {
     show: false
@@ -78,13 +77,12 @@ const { proxy } = getCurrentInstance() as any
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = props.data && props.data.id ? "编辑" : "新增"
-const record = reactive(props.data)
+const title = props.params.data && props.params.data.id ? "编辑" : "新增"
+const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 表单
 const formRef = ref<any>(null)
 const formData = reactive<any>({
-  id: record.id,
   userName: "",
   telephone: "",
   email: "",

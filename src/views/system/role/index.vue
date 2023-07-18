@@ -17,7 +17,7 @@
     <el-card shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button type="success" icon="CirclePlus" @click="handleSave">新增</el-button>
+          <el-button type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
           <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button>
           <el-button type="primary" icon="Avatar" :disabled="isSingle">授权用户</el-button>
         </div>
@@ -54,7 +54,7 @@
           <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
-              <el-button type="primary" plain size="small" @click.stop="handleSave(scope.row)">修改</el-button>
+              <el-button type="primary" plain size="small" @click.stop="handleEdit(scope.row)">修改</el-button>
               <el-button type="danger" plain size="small" @click.stop="handleDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -74,7 +74,7 @@
     <Save
       v-if="saveVisible"
       :show="saveVisible"
-      :data="currentRow"
+      :params="subParams"
       @hide="saveVisible = false"
       @refreshData="findPage"
     />
@@ -93,7 +93,6 @@ const { paginationData } = usePagination()
 const loading = ref<boolean>(false)
 const dataList = ref<any[]>([])
 const tableRef = ref<any>(null)
-const currentRow = ref(null)
 const selectList = ref<any>([])
 // 查询条件
 const searchRef = ref<any>(null)
@@ -104,7 +103,10 @@ const searchData = reactive({
 })
 // 子组件
 const saveVisible = ref<boolean>(false)
-const opt = ref<string>("")
+const subParams = reactive({
+  data: null,
+  opt: ""
+})
 
 /** 计算属性 */
 // 选中记录ID
@@ -193,6 +195,7 @@ const findPage = () => {
     .then((res) => {
       dataList.value = res.data.data
       paginationData.total = res.data.total
+      selectList.value = []
     })
     .catch(() => {
       dataList.value = []
@@ -209,12 +212,18 @@ const resetSearch = () => {
   searchRef.value.resetFields()
 }
 
-/** 新增 编辑 */
-const handleSave = (row?: any) => {
-  currentRow.value = row
+/** 新增 */
+const handleAdd = () => {
   saveVisible.value = true
-  if (row) opt.value = "edit"
-  else opt.value = "add"
+  subParams.data = null
+  subParams.opt = "add"
+}
+
+/** 编辑 */
+const handleEdit = (row: any) => {
+  saveVisible.value = true
+  subParams.data = row
+  subParams.opt = "edit"
 }
 
 /** 删除 */

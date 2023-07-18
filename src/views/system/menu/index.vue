@@ -73,16 +73,14 @@
     <Save
       v-if="saveVisible"
       :show="saveVisible"
-      :data="currentRow"
-      :opt="opt"
+      :params="subParams"
       @hide="saveVisible = false"
       @refreshData="findTree"
     />
     <AuthPerms
       v-if="authPermsVisible"
       :show="authPermsVisible"
-      :data="currentRow"
-      :opt="opt"
+      :params="subParams"
       @hide="authPermsVisible = false"
       @refreshData="findTree"
     />
@@ -115,7 +113,10 @@ const isExpandAll = ref<boolean>(false)
 // 子组件
 const saveVisible = ref<boolean>(false)
 const authPermsVisible = ref<boolean>(false)
-const opt = ref("")
+const subParams = reactive({
+  data: null,
+  opt: ""
+})
 
 /** 当前选中行 */
 const rowClick = (row: any) => {
@@ -162,21 +163,22 @@ const resetSearch = () => {
 /** 新增 */
 const handleAdd = () => {
   saveVisible.value = true
-  opt.value = "add"
+  subParams.data = currentRow.value
+  subParams.opt = "add"
 }
 
 /** 编辑 */
 const handleEdit = (row: any) => {
-  currentRow.value = row
   saveVisible.value = true
-  opt.value = "edit"
+  subParams.data = row
+  subParams.opt = "edit"
 }
 
 /** 授权按钮 */
 const handleAuthPerms = (row?: any) => {
-  opt.value = "authPerms"
-  currentRow.value = row
   authPermsVisible.value = true
+  subParams.data = row
+  subParams.opt = "authPerms"
 }
 
 /** 删除 */

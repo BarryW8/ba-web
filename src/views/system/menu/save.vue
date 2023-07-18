@@ -217,8 +217,7 @@ const { proxy } = getCurrentInstance() as any
 const props = withDefaults(
   defineProps<{
     show: boolean
-    data: any
-    opt?: string
+    params: any
   }>(),
   {
     show: false
@@ -231,8 +230,8 @@ const emit = defineEmits<{
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = props.data && props.data.id ? "编辑" : "新增"
-const record = reactive(props.data)
+const title = props.params.data && props.params.data.id ? "编辑" : "新增"
+const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 图标
 const showChooseIcon = ref(false)
@@ -329,22 +328,13 @@ const hide = () => emit("hide")
 /** 初始化 */
 console.log("###初始化")
 findTree()
-if (props.opt === "add") {
+if (props.params.opt === "add") {
   if (record && record.id) {
     formData.parentId = record.id
   }
-} else if (props.opt === "edit") {
+} else if (props.params.opt === "edit") {
   findById()
 }
-
-// if (record) {
-//   if (record.id) {
-//     findById()
-//   } else if (record.parentId) {
-//     formData.parentId = record.parentId
-//     console.log(formData.parentId)
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>
