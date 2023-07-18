@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- 新增/修改 -->
     <el-dialog
       v-model="dialogVisible"
       v-loading="loading"
@@ -60,12 +59,12 @@ const emit = defineEmits<{
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = "授权角色"
+const title = "授权按钮"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 const dataList = ref<any[]>([])
 // 穿梭框
-const selectList = ref([])
+const selectList = ref<any[]>([])
 // 表单
 const formData = reactive<any>({
   parentId: "-1",
@@ -101,6 +100,7 @@ const dictOptions = () => {
 const findById = () => {
   findByIdApi({ modelId: record.id }).then((res) => {
     Object.assign(formData, res.data)
+    if (res.data && res.data.perms) selectList.value = res.data.perms.split(",")
   })
 }
 

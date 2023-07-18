@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- 新增/修改 -->
     <!-- 加上 destroy-on-close 属性：打开弹框再关闭后，弹框中的 DOM 元素没有被销毁，可能会因为不该存在的 DOM 元素而报错 -->
     <el-dialog
       v-model="dialogVisible"

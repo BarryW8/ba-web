@@ -1,3 +1,47 @@
+<template>
+  <div class="app-container">
+    <el-dialog
+      v-model="dialogVisible"
+      v-loading="loading"
+      :title="title"
+      :close-on-click-modal="false"
+      draggable
+      width="700"
+      @close="hide"
+    >
+      <div class="table-wrapper">
+        <el-table
+          ref="tableRef"
+          v-loading="loading"
+          :data="dataList"
+          border
+          row-key="id"
+          @select="handleSelect"
+          @select-all="handleSelectAll"
+          @row-click="rowClick"
+        >
+          <el-table-column type="selection" reserve-selection width="50" align="center" />
+          <el-table-column prop="roleCode" label="角色编号" align="center" />
+          <el-table-column prop="roleName" label="角色名称" align="center" />
+        </el-table>
+      </div>
+      <div class="pager-wrapper">
+        <pagination
+          :pageNum="paginationData.pageNum"
+          :pageSize="paginationData.pageSize"
+          :total="paginationData.total"
+          :hidden="!paginationData.total"
+          @pagination="findPage"
+        />
+      </div>
+      <template #footer>
+        <el-button @click="hide">取消</el-button>
+        <el-button type="primary" @click="save">确认</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { saveUserRoleApi, findUserRoleApi } from "@/api/system/user"
 import { findPageApi } from "@/api/system/role"
@@ -154,43 +198,6 @@ const hide = () => emit("hide")
 /** 初始化 */
 findUserRole()
 </script>
-
-<template>
-  <div class="app-container">
-    <!-- 新增/修改 -->
-    <el-dialog v-model="dialogVisible" v-loading="loading" :title="title" width="700px" @close="hide">
-      <div class="table-wrapper">
-        <el-table
-          ref="tableRef"
-          v-loading="loading"
-          :data="dataList"
-          border
-          row-key="id"
-          @select="handleSelect"
-          @select-all="handleSelectAll"
-          @row-click="rowClick"
-        >
-          <el-table-column type="selection" reserve-selection width="50" align="center" />
-          <el-table-column prop="roleCode" label="角色编号" align="center" />
-          <el-table-column prop="roleName" label="角色名称" align="center" />
-        </el-table>
-      </div>
-      <div class="pager-wrapper">
-        <pagination
-          :pageNum="paginationData.pageNum"
-          :pageSize="paginationData.pageSize"
-          :total="paginationData.total"
-          :hidden="!paginationData.total"
-          @pagination="findPage"
-        />
-      </div>
-      <template #footer>
-        <el-button @click="hide">取消</el-button>
-        <el-button type="primary" @click="save">确认</el-button>
-      </template>
-    </el-dialog>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .search-wrapper {
