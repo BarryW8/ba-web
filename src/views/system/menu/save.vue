@@ -66,24 +66,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="显示排序" prop="orderBy">
-              <el-input-number v-model="formData.orderBy" controls-position="right" :min="0" style="width: 100%" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item prop="isFrame">
-              <template #label>
-                <span>
-                  <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
-                    <el-icon><question-filled /></el-icon>
-                  </el-tooltip>
-                  是否外链
-                </span>
-              </template>
-              <el-radio-group v-model="formData.isFrame">
-                <el-radio :label="0">否</el-radio>
-                <el-radio :label="1">是</el-radio>
-              </el-radio-group>
+            <el-form-item label="菜单标识" prop="menuCode">
+              <el-input v-model="formData.menuCode" placeholder="请输入菜单标识" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -115,6 +99,11 @@
               <el-input v-model="formData.pagePath" placeholder="请输入组件路径" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="显示排序" prop="orderBy">
+              <el-input-number v-model="formData.orderBy" controls-position="right" :min="0" style="width: 100%" />
+            </el-form-item>
+          </el-col>
           <el-col :span="12" v-if="formData.menuType !== 'M'">
             <el-form-item>
               <el-input v-model="formData.perms" placeholder="请输入权限标识" maxlength="100" />
@@ -131,17 +120,20 @@
               </template>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="formData.menuType === 'C'">
-            <el-form-item>
-              <el-input v-model="formData.query" placeholder="请输入路由参数" maxlength="255" />
+          <el-col :span="12">
+            <el-form-item prop="isFrame">
               <template #label>
                 <span>
-                  <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`' placement="top">
+                  <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
                     <el-icon><question-filled /></el-icon>
                   </el-tooltip>
-                  路由参数
+                  是否外链
                 </span>
               </template>
+              <el-radio-group v-model="formData.isFrame">
+                <el-radio :label="0">否</el-radio>
+                <el-radio :label="1">是</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="formData.menuType === 'C'">
@@ -195,6 +187,19 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+          <el-col :span="24" v-if="formData.menuType === 'C'">
+            <el-form-item>
+              <el-input v-model="formData.query" placeholder="请输入路由参数" maxlength="255" />
+              <template #label>
+                <span>
+                  <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`' placement="top">
+                    <el-icon><question-filled /></el-icon>
+                  </el-tooltip>
+                  路由参数
+                </span>
+              </template>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <template #footer>
@@ -242,8 +247,8 @@ const formRef = ref<any>(null)
 const formData = reactive<any>({
   parentId: "-1",
   menuName: "",
-  menuType: "C",
   menuCode: "",
+  menuType: "C",
   icon: "",
   isFrame: 0,
   routePath: "",
@@ -256,6 +261,7 @@ const formData = reactive<any>({
 })
 const formRules = reactive({
   menuName: [{ required: true, message: "菜单名称不能为空", trigger: "blur" }],
+  menuCode: [{ required: true, message: "菜单标识不能为空", trigger: "blur" }],
   orderBy: [{ required: true, message: "显示排序不能为空", trigger: "blur" }],
   routePath: [{ required: true, message: "路由地址不能为空", trigger: "blur" }]
 })

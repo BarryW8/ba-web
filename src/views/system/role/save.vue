@@ -139,7 +139,7 @@ const handleSave = () => {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
       const params = Object.assign(formData, {
-        permList: treeRef.value.getCheckedKeys(true)
+        permList: treeRef.value.getCheckedNodes(true)
       })
       loading.value = true
       saveApi(params)
