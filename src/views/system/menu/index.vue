@@ -150,6 +150,9 @@ const findTree = () => {
   findTreeApi(searchData)
     .then((res) => {
       dataList.value = res.data
+      // 清空选中
+      tableRef.value.setCurrentRow(null)
+      currentRow.value = null
     })
     .catch(() => {
       dataList.value = []

@@ -199,6 +199,8 @@ const findPage = () => {
     .then((res) => {
       dataList.value = res.data.data
       paginationData.total = res.data.total
+      // 清空选中
+      tableRef.value.clearSelection()
       selectList.value = []
     })
     .catch(() => {
