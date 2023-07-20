@@ -37,8 +37,8 @@
         </el-form-item>
         <el-form-item prop="sex" label="性别">
           <el-radio-group v-model="formData.sex">
-            <el-radio :label="1">男</el-radio>
-            <el-radio :label="0">女</el-radio>
+            <el-radio :label="1" border>男</el-radio>
+            <el-radio :label="0" border>女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item prop="roleStatus" label="用户状态">
@@ -46,6 +46,9 @@
             <el-radio :label="0" border>正常</el-radio>
             <el-radio :label="1" border>停用</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item prop="avatar" label="头像">
+          <imageUpload v-model="fileList" limit="1" @updateFileList="updateFileList" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -95,11 +98,21 @@ const formRules = reactive({
     { min: 11, max: 11, trigger: "blur", message: "手机号不合法" }
   ]
 })
+// 文件上传
+const fileList = ref<any>([])
+
+/** 查询详情 */
+const updateFileList = (val: any) => {
+  fileList.value = val
+  console.log(val)
+}
 
 /** 查询详情 */
 const findById = () => {
   findByIdApi({ modelId: record.id }).then((res) => {
     Object.assign(formData, res.data)
+    if (res.data.avatar) fileList.value = JSON.parse(res.data.avatar)
+    console.log(fileList.value)
   })
 }
 
@@ -107,7 +120,10 @@ const findById = () => {
 const handleSave = () => {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
-      saveApi(formData).then(() => {
+      const params = Object.assign(formData, {
+        avatar: fileList.value.length ? JSON.stringify(fileList.value) : null
+      })
+      saveApi(params).then(() => {
         proxy.$modal.msgSuccess("保存成功")
         emit("refreshData")
         emit("hide")

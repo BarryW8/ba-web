@@ -61,7 +61,7 @@ export const useUserStore = defineStore("user", () => {
     removeUserId()
     token.value = ""
     userId.value = ""
-    userInfo.value = ""
+    userInfo.value = null
     resetRouter()
     _resetTagsView()
   }
