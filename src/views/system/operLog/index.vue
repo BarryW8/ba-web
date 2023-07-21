@@ -19,9 +19,6 @@
         <div>
           <el-button v-permission="1" type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
           <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button>
-          <el-button v-permission="4" type="primary" icon="Avatar" :disabled="isSingle" @click="handleAuthRole"
-            >授权角色</el-button
-          >
         </div>
         <div>
           <el-tooltip placement="top" content="隐藏搜索">
@@ -44,22 +41,28 @@
           @row-click="rowClick"
         >
           <el-table-column type="selection" reserve-selection width="50" align="center" />
-          <el-table-column prop="userName" label="用户名" align="center" />
-          <el-table-column prop="roleName" label="所属角色" align="center">
+          <!-- <el-table-column type="index" label="日志编号" align="center" /> -->
+          <el-table-column prop="business" label="系统模块" align="center" show-overflow-tooltip />
+          <el-table-column prop="operType" label="操作类型" align="center">
             <template #default="scope">
-              <el-tag v-if="scope.row.roleName" type="warning" effect="plain">{{ scope.row.roleName }}</el-tag>
+              <el-tag type="warning" effect="plain">{{ scope.row.operType }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="telephone" label="手机号" align="center" show-overflow-tooltip />
-          <el-table-column prop="email" label="邮箱" align="center" show-overflow-tooltip />
-          <el-table-column prop="userStatus" label="状态" width="100" align="center">
+          <el-table-column prop="operatorName" label="操作人员" align="center" show-overflow-tooltip />
+          <el-table-column prop="operatorPhone" label="操作手机号" align="center" show-overflow-tooltip />
+          <el-table-column prop="operIp" label="操作地址" align="center" show-overflow-tooltip />
+          <el-table-column prop="operLocation" label="操作地点" align="center" show-overflow-tooltip />
+          <el-table-column prop="status" label="操作状态" width="100" align="center">
             <template #default="scope">
-              <el-tag v-if="scope.row.userStatus" type="danger" effect="dark">停用</el-tag>
+              <el-tag v-if="scope.row.status" type="danger" effect="dark">异常</el-tag>
               <el-tag v-else type="success" effect="dark">正常</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
-          <el-table-column fixed="right" label="操作" width="150" align="center">
+          <el-table-column prop="operTime" label="操作日期" width="160" align="center" />
+          <el-table-column prop="costTime" label="消耗时间" width="160" align="center">
+            <template #default="scope">{{ scope.row.costTime + "毫秒" }}</template>
+          </el-table-column>
+          <!-- <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
               <el-button v-permission="2" type="primary" plain size="small" @click.stop="handleEdit(scope.row)"
                 >修改</el-button
@@ -68,7 +71,7 @@
                 >删除</el-button
               >
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </div>
       <div class="pager-wrapper">
@@ -89,21 +92,13 @@
       @hide="saveVisible = false"
       @refreshData="findPage"
     />
-    <AuthRole
-      v-if="authRoleVisible"
-      :show="authRoleVisible"
-      :params="subParams"
-      @hide="authRoleVisible = false"
-      @refreshData="findPage"
-    />
   </div>
 </template>
 
-<script name="User" lang="ts" setup>
-import { findPageApi, deleteByIdApi } from "@/api/system/user"
+<script name="OperLog" lang="ts" setup>
+import { findPageApi, deleteByIdApi } from "@/api/system/operLog"
 import { usePagination } from "@/hooks/usePagination"
 import Save from "./save.vue"
-import AuthRole from "./authRole.vue"
 
 const { proxy } = getCurrentInstance() as any
 const { paginationData } = usePagination()
@@ -122,7 +117,6 @@ const searchData = reactive({
 })
 // 子组件
 const saveVisible = ref<boolean>(false)
-const authRoleVisible = ref<boolean>(false)
 const subParams = reactive({
   data: null,
   opt: ""
@@ -267,14 +261,6 @@ const handleDelete = (row?: any) => {
         findPage()
       })
     })
-}
-
-/** 授权角色 */
-const handleAuthRole = () => {
-  if (proxy.$common.checkSingle(isSingle.value)) return
-  authRoleVisible.value = true
-  subParams.data = selectList.value[0]
-  subParams.opt = "edit"
 }
 
 /** 初始化 */
