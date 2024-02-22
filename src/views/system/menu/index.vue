@@ -52,6 +52,13 @@
           <el-table-column prop="perms" label="权限标识" align="center" />
           <el-table-column prop="routePath" label="路由路径" align="center" show-overflow-tooltip />
           <el-table-column prop="pagePath" label="文件路径" align="center" show-overflow-tooltip />
+          <el-table-column
+            prop="menuType"
+            label="菜单类型"
+            align="center"
+            :formatter="formatter"
+            show-overflow-tooltip
+          />
           <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
           <el-table-column fixed="right" label="操作" width="200" align="center">
             <template #default="scope">
@@ -95,6 +102,7 @@
 <script name="Menu" lang="ts" setup>
 import { findTreeApi, deleteByIdApi } from "@/api/system/menu"
 import SvgIcon from "@/components/SvgIcon/index.vue"
+import Common from "@/utils/common"
 import Save from "./save.vue"
 import AuthPerms from "./authPerms.vue"
 
@@ -149,7 +157,7 @@ const findTree = () => {
   loading.value = true
   findTreeApi(searchData)
     .then((res) => {
-      dataList.value = res.data
+      dataList.value = Common.menu2Tree(res.data)
       // 清空选中
       tableRef.value.setCurrentRow(null)
       currentRow.value = null
@@ -161,6 +169,7 @@ const findTree = () => {
       loading.value = false
     })
 }
+
 const handleSearch = () => {
   findTree()
 }
@@ -170,6 +179,10 @@ const resetSearch = () => {
 
 /** 新增 */
 const handleAdd = () => {
+  if (currentRow.value && currentRow.value.menuType === "C") {
+    proxy.$modal.msgWarning("禁止对<菜单>进行新增操作")
+    return
+  }
   saveVisible.value = true
   subParams.data = currentRow.value
   subParams.opt = "add"
@@ -204,6 +217,23 @@ const handleDelete = (row: any) => {
       })
     })
     .catch(() => {})
+}
+
+// 格式化数据
+const formatter = (row: any, column: any, cellValue: any, index: number) => {
+  console.log(row.menuType)
+  console.log(cellValue)
+  if (column.property === "menuType") {
+    switch (cellValue) {
+      case "M":
+        cellValue = "目录"
+        break
+      case "C":
+        cellValue = "菜单"
+        break
+    }
+  }
+  return cellValue
 }
 
 /** 初始化 */

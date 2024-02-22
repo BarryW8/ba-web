@@ -211,10 +211,11 @@
 </template>
 
 <script lang="ts" setup>
-import { saveApi, findByIdApi, findTreeApi } from "@/api/system/menu"
+import { addApi, editApi, findByIdApi, findTreeApi } from "@/api/system/menu"
 import { visibleOption, statusOption } from "@/api/system/menu/option"
 import IconSelect from "@/components/IconSelect/index.vue"
 import SvgIcon from "@/components/SvgIcon/index.vue"
+import Common from "@/utils/common"
 
 const { proxy } = getCurrentInstance() as any
 
@@ -234,7 +235,8 @@ const emit = defineEmits<{
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = props.params.data && props.params.data.id ? "编辑" : "新增"
+const pageType = ref<string>(props.params.opt)
+const title = pageType.value === "add" ? "新增" : "编辑"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 图标
@@ -269,6 +271,7 @@ const formRules = reactive({
 // 设置图标
 /** 展示下拉图标 */
 const showSelectIcon = () => {
+  console.log("showSelectIcon----")
   iconSelectRef.value?.reset()
   showChooseIcon.value = true
 }
@@ -276,9 +279,11 @@ const showSelectIcon = () => {
 const handleSelected = (name: string) => {
   formData.icon = name
   showChooseIcon.value = false
+  console.log("handleSelected----", showChooseIcon.value)
 }
 /** 图标外层点击隐藏下拉列表 */
 const hideSelectIcon = (event: any) => {
+  console.log("hideSelectIcon----")
   const elem = event.relatedTarget || event.srcElement || event.target || event.currentTarget
   const className = elem.className
   if (className !== "el-input__inner") {
@@ -292,7 +297,7 @@ const findTree = () => {
   findTreeApi({})
     .then((res) => {
       const menu = { id: "-1", menuName: "主类目", children: [] }
-      menu.children = res.data
+      menu.children = Common.menu2Tree(res.data)
       menuOption.value.push(menu)
       console.log(menuOption.value)
     })
@@ -316,15 +321,26 @@ const findById = () => {
 const handleSave = () => {
   formRef.value?.validate((valid: boolean) => {
     if (valid) {
-      saveApi(formData).then(() => {
-        proxy.$modal.msgSuccess("保存成功")
-        emit("refreshData")
-        emit("hide")
-      })
+      save(formData)
     } else {
       return false
     }
   })
+}
+const save = (params: any) => {
+  if (pageType.value === "add") {
+    addApi(params).then(() => {
+      proxy.$modal.msgSuccess("新增成功")
+      emit("refreshData")
+      emit("hide")
+    })
+  } else {
+    editApi(params).then(() => {
+      proxy.$modal.msgSuccess("编辑成功")
+      emit("refreshData")
+      emit("hide")
+    })
+  }
 }
 
 /** 关闭弹窗 */

@@ -9,26 +9,28 @@
       width="700"
       @close="hide"
     >
-      <el-transfer
-        v-model="selectList"
-        filterable
-        :filter-method="filterMethod"
-        filter-placeholder="请输入"
-        :titles="['待授权', '已授权']"
-        :format="{
-          noChecked: '${total}',
-          hasChecked: '${checked}/${total}'
-        }"
-        :props="{
-          key: 'code',
-          label: 'name'
-        }"
-        :data="dataList"
-      >
-        <template #default="{ option }">
-          <span>{{ option.code }} - {{ option.name }}</span>
-        </template>
-      </el-transfer>
+      <div class="transfer-wrapper">
+        <el-transfer
+          v-model="selectList"
+          filterable
+          :filter-method="filterMethod"
+          filter-placeholder="请输入"
+          :titles="['待授权', '已授权']"
+          :format="{
+            noChecked: '${total}',
+            hasChecked: '${checked}/${total}'
+          }"
+          :props="{
+            key: 'code',
+            label: 'name'
+          }"
+          :data="dataList"
+        >
+          <template #default="{ option }">
+            <span>{{ option.code }} - {{ option.name }}</span>
+          </template>
+        </el-transfer>
+      </div>
       <template #footer>
         <el-button @click="hide">取消</el-button>
         <el-button type="primary" @click="handleSave">确认</el-button>
@@ -39,7 +41,7 @@
 
 <script lang="ts" setup>
 import { optionListApi } from "@/api/system/dictionary"
-import { saveApi, findByIdApi } from "@/api/system/menu"
+import { editApi, findByIdApi } from "@/api/system/menu"
 
 const { proxy } = getCurrentInstance() as any
 
@@ -59,7 +61,7 @@ const emit = defineEmits<{
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = "授权按钮"
+const title = "按钮权限"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 const dataList = ref<any[]>([])
@@ -110,8 +112,8 @@ const handleSave = () => {
   const params = Object.assign(formData, {
     perms: selectList.value.join(",")
   })
-  saveApi(params).then(() => {
-    proxy.$modal.msgSuccess("保存成功")
+  editApi(params).then(() => {
+    proxy.$modal.msgSuccess("编辑成功")
     emit("refreshData")
     emit("hide")
   })
@@ -129,25 +131,7 @@ if (record && record.id) {
 </script>
 
 <style lang="scss" scoped>
-.search-wrapper {
-  margin-bottom: 20px;
-  :deep(.el-card__body) {
-    padding-bottom: 2px;
-  }
-}
-
-.toolbar-wrapper {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.table-wrapper {
-  margin-bottom: 20px;
-}
-
-.pager-wrapper {
-  display: flex;
-  justify-content: flex-end;
+.transfer-wrapper {
+  text-align: center;
 }
 </style>

@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { saveApi, findByIdApi } from "@/api/system/user"
+import { addApi, editApi, findByIdApi } from "@/api/system/user"
 
 const props = withDefaults(
   defineProps<{
@@ -80,7 +80,8 @@ const { proxy } = getCurrentInstance() as any
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = props.params.data && props.params.data.id ? "编辑" : "新增"
+const pageType = ref<string>(props.params.opt)
+const title = pageType.value === "add" ? "新增" : "编辑"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 表单
@@ -123,15 +124,26 @@ const handleSave = () => {
       const params = Object.assign(formData, {
         avatar: fileList.value.length ? JSON.stringify(fileList.value) : null
       })
-      saveApi(params).then(() => {
-        proxy.$modal.msgSuccess("保存成功")
-        emit("refreshData")
-        emit("hide")
-      })
+      save(params)
     } else {
       return false
     }
   })
+}
+const save = (params: any) => {
+  if (pageType.value === "add") {
+    addApi(params).then(() => {
+      proxy.$modal.msgSuccess("新增成功")
+      emit("refreshData")
+      emit("hide")
+    })
+  } else {
+    editApi(params).then(() => {
+      proxy.$modal.msgSuccess("编辑成功")
+      emit("refreshData")
+      emit("hide")
+    })
+  }
 }
 
 /** 关闭弹窗 */

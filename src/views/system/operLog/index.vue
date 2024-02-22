@@ -17,7 +17,6 @@
     <el-card shadow="never">
       <div class="toolbar-wrapper">
         <div>
-          <el-button v-permission="1" type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
           <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button>
         </div>
         <div>
@@ -45,7 +44,7 @@
           <el-table-column prop="business" label="系统模块" align="center" show-overflow-tooltip />
           <el-table-column prop="operType" label="操作类型" align="center">
             <template #default="scope">
-              <el-tag type="warning" effect="plain">{{ scope.row.operType }}</el-tag>
+              <el-tag effect="light">{{ transfer(scope.row.operType) }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="operatorName" label="操作人员" align="center" show-overflow-tooltip />
@@ -62,16 +61,13 @@
           <el-table-column prop="costTime" label="消耗时间" width="160" align="center">
             <template #default="scope">{{ scope.row.costTime + "毫秒" }}</template>
           </el-table-column>
-          <!-- <el-table-column fixed="right" label="操作" width="150" align="center">
+          <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
-              <el-button v-permission="2" type="primary" plain size="small" @click.stop="handleEdit(scope.row)"
-                >修改</el-button
-              >
-              <el-button v-permission="3" type="danger" plain size="small" @click.stop="handleDelete(scope.row)"
-                >删除</el-button
+              <el-button type="info" plain size="small" @click.stop="handleDetail(scope.row)"
+                >详情</el-button
               >
             </template>
-          </el-table-column> -->
+          </el-table-column>
         </el-table>
       </div>
       <div class="pager-wrapper">
@@ -85,20 +81,20 @@
       </div>
     </el-card>
     <!-- 不能直接在自定义组件上使用 v-if，否则会有警告：Runtime directive used on component with non-element root node. The directives will not function as intended. -->
-    <Save
-      v-if="saveVisible"
-      :show="saveVisible"
+    <Detail
+      v-if="detailVisible"
+      :show="detailVisible"
       :params="subParams"
-      @hide="saveVisible = false"
+      @hide="detailVisible = false"
       @refreshData="findPage"
     />
   </div>
 </template>
 
 <script name="OperLog" lang="ts" setup>
-import { findPageApi, deleteByIdApi } from "@/api/system/operLog"
+import { findPageApi, deleteByIdApi, findOperTypeApi } from "@/api/system/operLog"
 import { usePagination } from "@/hooks/usePagination"
-import Save from "./save.vue"
+import Detail from "./detail.vue"
 
 const { proxy } = getCurrentInstance() as any
 const { paginationData } = usePagination()
@@ -106,6 +102,7 @@ const { paginationData } = usePagination()
 /** 基本属性 */
 const loading = ref<boolean>(false)
 const dataList = ref<any[]>([])
+const operTypes = ref<any>({})
 const tableRef = ref<any>(null)
 const selectList = ref<any>([])
 // 查询条件
@@ -116,7 +113,7 @@ const searchData = reactive({
   phone: undefined
 })
 // 子组件
-const saveVisible = ref<boolean>(false)
+const detailVisible = ref<boolean>(false)
 const subParams = reactive({
   data: null,
   opt: ""
@@ -231,18 +228,11 @@ const resetSearch = () => {
   searchRef.value.resetFields()
 }
 
-/** 新增 */
-const handleAdd = () => {
-  saveVisible.value = true
-  subParams.data = null
-  subParams.opt = "add"
-}
-
 /** 编辑 */
-const handleEdit = (row: any) => {
-  saveVisible.value = true
+const handleDetail = (row: any) => {
+  detailVisible.value = true
   subParams.data = row
-  subParams.opt = "edit"
+  subParams.opt = "detail"
 }
 
 /** 删除 */
@@ -263,9 +253,23 @@ const handleDelete = (row?: any) => {
     })
 }
 
+/** 获取操作类型 */
+const findOperType = () => {
+  findOperTypeApi().then((res) => {
+    operTypes.value = res.data
+  })
+}
+
+const transfer = (code: string) => {
+  console.log(operTypes.value)
+  console.log(code)
+  return operTypes.value[code];
+}
+
 /** 初始化 */
 console.log("###初始化")
 findPage()
+findOperType()
 </script>
 
 <style lang="scss" scoped>

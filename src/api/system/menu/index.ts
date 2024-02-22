@@ -1,11 +1,23 @@
 import { request } from "@/utils/service"
-import Api from "./api"
+import CommonApi from "@/api/common-api"
 import { ListResult, Model, ModelResult, PageParams, PageResult } from "./types"
+
+const BASE_API = "system-server/sysMenu"
+const api = {
+  optionList: BASE_API + CommonApi.optionList,
+  add: BASE_API + CommonApi.add,
+  edit: BASE_API + CommonApi.edit,
+  deleteById: BASE_API + CommonApi.deleteById,
+  findById: BASE_API + CommonApi.findById,
+  findPage: BASE_API + CommonApi.findPage,
+  findTree: BASE_API + "/findTree",
+  findTreePerms: BASE_API + "/findTreePerms"
+}
 
 /** 下拉列表 */
 export function optionListApi(params?: { modelId?: string }) {
   return request<ListResult>({
-    url: Api.optionList,
+    url: api.optionList,
     method: "get",
     params
   })
@@ -14,7 +26,7 @@ export function optionListApi(params?: { modelId?: string }) {
 /** 查询树-封装按钮权限 */
 export function findTreePermsApi() {
   return request<ListResult>({
-    url: Api.findTreePerms,
+    url: api.findTreePerms,
     method: "get"
   })
 }
@@ -22,16 +34,25 @@ export function findTreePermsApi() {
 /** 查询树 */
 export function findTreeApi(data: PageParams) {
   return request<any>({
-    url: Api.findTree,
+    url: api.findTree,
     method: "post",
     data
   })
 }
 
-/** 新增/编辑 */
-export function saveApi(data: Model) {
+/** 新增 */
+export function addApi(data: Model) {
   return request({
-    url: Api.save,
+    url: api.add,
+    method: "post",
+    data
+  })
+}
+
+/** 编辑 */
+export function editApi(data: Model) {
+  return request({
+    url: api.edit,
     method: "post",
     data
   })
@@ -40,7 +61,7 @@ export function saveApi(data: Model) {
 /** 删除 */
 export function deleteByIdApi(params: { modelId: string }) {
   return request({
-    url: Api.deleteById,
+    url: api.deleteById,
     method: "get",
     params
   })
@@ -49,7 +70,7 @@ export function deleteByIdApi(params: { modelId: string }) {
 /** 详情 */
 export function findByIdApi(params: { modelId: string }) {
   return request<ModelResult>({
-    url: Api.findById,
+    url: api.findById,
     method: "get",
     params
   })
@@ -58,7 +79,7 @@ export function findByIdApi(params: { modelId: string }) {
 /** 分页查询 */
 export function findPageApi(data: PageParams) {
   return request<PageResult>({
-    url: Api.findPage,
+    url: api.findPage,
     method: "post",
     data
   })

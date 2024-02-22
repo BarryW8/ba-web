@@ -37,9 +37,9 @@ export const useUserStore = defineStore("user", () => {
     const { data } = await getUserInfoApi()
     userInfo.value = data
     // 保存动态路由信息
-    if (data && data.menuList) {
-      permissionStore.dynamicRoutes = data.menuList
-      console.log("SET_ROUTES=", data.menuList)
+    if (data && data.menus) {
+      permissionStore.dynamicRoutes = data.menus
+      console.log("SET_ROUTES=", data.menus)
     }
   }
   /** 切换角色 */

@@ -75,6 +75,27 @@ const common = {
       })
     }
     return isSelect
+  },
+  menu2Tree(menus: any): any[] {
+    const res: any[] = []
+    let { levelOneList, levelTwoList } = menus
+    levelOneList.forEach((menu1) => {
+      // 目录
+      menu1.children = []
+
+      // 菜单
+      levelTwoList.forEach((menu2) => {
+        if (menu2.parentId === menu1.id) {
+          menu1.children.push(menu2)
+        } else {
+          // 将没有父节点的菜单展示出来，方便修改
+          res.push(menu2)
+        }
+      })
+
+      res.push(menu1)
+    })
+    return res
   }
 }
 

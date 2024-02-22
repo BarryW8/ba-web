@@ -6,7 +6,8 @@ export const api = {
   save: BASE_API + "/save",
   deleteById: BASE_API + "/deleteById",
   findById: BASE_API + "/findById",
-  findPage: BASE_API + "/findPage"
+  findPage: BASE_API + "/findPage",
+  findOperType: BASE_API + "/findOperType"
 }
 
 /** 新增/编辑 */
@@ -42,5 +43,13 @@ export function findPageApi(data: any) {
     url: api.findPage,
     method: "post",
     data
+  })
+}
+
+/** 获取操作类型（后端枚举） */
+export function findOperTypeApi() {
+  return request({
+    url: api.findOperType,
+    method: "get"
   })
 }

@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { saveApi, findByIdApi, findTreeApi } from "@/api/system/dictionary"
+import { addApi, editApi, findByIdApi, findTreeApi } from "@/api/system/dictionary"
 import { statusOption } from "@/api/system/dictionary/option"
 
 const { proxy } = getCurrentInstance() as any
@@ -68,7 +68,8 @@ const emit = defineEmits<{
 
 /** 基本属性 */
 const dialogVisible = ref<boolean>(props.show)
-const title = props.params.data && props.params.data.id ? "编辑" : "新增"
+const pageType = ref<string>(props.params.opt)
+const title = pageType.value === "add" ? "新增" : "编辑"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
 // 字典树
@@ -127,15 +128,26 @@ const findById = () => {
 const handleSave = () => {
   formRef.value?.validate((valid: boolean) => {
     if (valid) {
-      saveApi(formData).then(() => {
-        proxy.$modal.msgSuccess("保存成功")
-        emit("refreshData")
-        emit("hide")
-      })
+      save(formData)
     } else {
       return false
     }
   })
+}
+const save = (params: any) => {
+  if (pageType.value === "add") {
+    addApi(params).then(() => {
+      proxy.$modal.msgSuccess("新增成功")
+      emit("refreshData")
+      emit("hide")
+    })
+  } else {
+    editApi(params).then(() => {
+      proxy.$modal.msgSuccess("编辑成功")
+      emit("refreshData")
+      emit("hide")
+    })
+  }
 }
 
 /** 关闭弹窗 */
