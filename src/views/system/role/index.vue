@@ -18,7 +18,7 @@
       <div class="toolbar-wrapper">
         <div>
           <el-button v-permission="1" type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
-          <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button>
+          <!-- <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button> -->
           <el-button v-permission="4" type="primary" icon="Avatar" :disabled="isSingle">授权用户</el-button>
         </div>
         <div>

@@ -45,7 +45,6 @@ const loginFormRules: FormRules = {
 }
 /** 登录逻辑 */
 const handleLogin = () => {
-  encryptMD5
   loginFormRef.value?.validate((valid: boolean, fields) => {
     if (valid) {
       const params = Object.assign({

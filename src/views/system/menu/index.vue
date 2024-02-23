@@ -67,7 +67,7 @@
               >
               <el-button
                 v-show="scope.row.menuType === 'C'"
-                v-permission="4"
+                v-permission="2"
                 type="success"
                 plain
                 size="small"

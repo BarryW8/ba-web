@@ -18,7 +18,7 @@
       <div class="toolbar-wrapper">
         <div>
           <el-button v-permission="1" type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
-          <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button>
+          <!-- <el-button type="danger" icon="Delete" :disabled="isSelect" @click="handleDelete()">批量删除</el-button> -->
           <el-button v-permission="4" type="primary" icon="Avatar" :disabled="isSingle" @click="handleAuthRole"
             >授权角色</el-button
           >
@@ -253,7 +253,6 @@ const handleEdit = (row: any) => {
 
 /** 删除 */
 const handleDelete = (row?: any) => {
-  if (!row && proxy.$common.checkSelect(isSelect.value)) return
   const label = row ? row.userName : selectNames.value.join(",")
   proxy.$modal
     .confirm(`正在删除：${label}，是否继续？`, "提示", {

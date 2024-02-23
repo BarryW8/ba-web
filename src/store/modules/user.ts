@@ -6,7 +6,7 @@ import { useTagsViewStore } from "./tags-view"
 import { getToken, setToken, removeToken } from "@/utils/cache/cookies"
 import { getUserId, setUserId, removeUserId } from "@/utils/cache/session-storage"
 import router, { resetRouter } from "@/router"
-import { loginApi, getUserInfoApi } from "@/api/login"
+import { loginApi, getUserInfoApi, logoutApi } from "@/api/login"
 import { type LoginRequestData } from "@/api/login/types/login"
 import { type RouteRecordRaw } from "vue-router"
 
@@ -56,7 +56,8 @@ export const useUserStore = defineStore("user", () => {
     // _resetTagsView()
   }
   /** 登出 */
-  const logout = () => {
+  const logout = async () => {
+    await logoutApi()
     removeToken()
     removeUserId()
     token.value = ""
