@@ -1,12 +1,13 @@
 <template>
   <div class="app-container">
     <el-card v-show="showSearch" shadow="never" class="search-wrapper">
+      <!-- 查询条件 -->
       <el-form ref="searchRef" :inline="true" :model="searchData">
-        <el-form-item prop="username" label="用户名">
-          <el-input v-model="searchData.username" placeholder="请输入" />
+        <el-form-item prop="userName" label="用户名">
+          <el-input v-model="searchData.userName" placeholder="请输入" @keyup.enter="handleSearch" />
         </el-form-item>
         <el-form-item prop="phone" label="手机号">
-          <el-input v-model="searchData.phone" placeholder="请输入" />
+          <el-input v-model="searchData.phone" placeholder="请输入" @keyup.enter="handleSearch" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="Search" @click="handleSearch">查询</el-button>
@@ -16,8 +17,9 @@
     </el-card>
     <el-card shadow="never">
       <div class="toolbar-wrapper">
+        <!-- 操作按钮 -->
         <div>
-          <el-button v-permission="1" type="success" icon="Plus" @click="handleAdd">新增</el-button>
+          <el-button v-permission="1" type="success" icon="CirclePlus" @click="handleAdd">新增</el-button>
           <el-button type="info" icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
         </div>
         <div>
@@ -41,12 +43,35 @@
           highlight-current-row
           @row-click="rowClick"
         >
-          <el-table-column prop="code" label="字典编号" align="center" />
-          <el-table-column prop="name" label="字典名称" align="center" />
-          <el-table-column prop="parentCode" label="上级编号" align="center" />
+          <el-table-column type="index" label="序号" width="70" align="center" />
+          <el-table-column prop="code" label="组织编码" align="center" show-overflow-tooltip />
+          <el-table-column prop="name" label="组织名称" width="150" align="center" show-overflow-tooltip />
+          <el-table-column prop="parentName" label="上级组织" width="100" align="center" show-overflow-tooltip />
+          <el-table-column prop="type" label="组织类型" align="center" :formatter="formatter" />
+          <el-table-column prop="isAttendance" label="是否考勤" align="center" :formatter="formatter" />
+          <el-table-column prop="workTime" label="工作时间" width="200" align="center" show-overflow-tooltip>
+            <template #default="scope">
+              {{
+                scope.row.isRest
+                  ? scope.row.workBegTime + "-" + scope.row.workEndTime
+                  : scope.row.workBegTime +
+                    "-" +
+                    scope.row.restBegTime +
+                    "," +
+                    scope.row.restEndTime +
+                    "-" +
+                    scope.row.workEndTime
+              }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="outTime" label="中途外出时间" width="120" align="center">
+            <template #default="scope">
+              {{ scope.row.outTime + "分钟" }}
+            </template>
+          </el-table-column>
           <el-table-column prop="orderBy" label="排序" align="center" />
           <el-table-column prop="createTime" label="创建时间" width="160" align="center" />
-          <el-table-column v-permission="['2', '3']" fixed="right" label="操作" width="150" align="center">
+          <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
               <el-button v-permission="2" type="primary" plain size="small" @click.stop="handleEdit(scope.row)"
                 >修改</el-button
@@ -59,6 +84,7 @@
         </el-table>
       </div>
     </el-card>
+    <!-- 不能直接在自定义组件上使用 v-if，否则会有警告：Runtime directive used on component with non-element root node. The directives will not function as intended. -->
     <Save
       v-if="saveVisible"
       :show="saveVisible"
@@ -69,8 +95,10 @@
   </div>
 </template>
 
-<script name="Dictionary" lang="ts" setup>
-import { findTreeApi, deleteByIdApi } from "@/api/system/dictionary"
+<script name="OrgManagement" lang="ts" setup>
+import { findTreeApi, deleteByIdApi } from "@/api/org/orgManagement"
+import { typeOption } from "@/api/org/orgManagement/option"
+import { usePagination } from "@/hooks/usePagination"
 import Save from "./save.vue"
 
 const { proxy } = getCurrentInstance() as any
@@ -81,13 +109,13 @@ const dataList = ref<any[]>([])
 const tableRef = ref<any>(null)
 const currentRow = ref(null)
 // 查询条件
-const showSearch = ref<boolean>(true)
 const searchRef = ref<any>(null)
+const showSearch = ref<boolean>(true)
 const searchData = reactive({
-  username: "",
-  phone: ""
+  userName: undefined,
+  phone: undefined
 })
-// 菜单树
+// 组织树
 const refreshTable = ref<boolean>(true)
 const isExpandAll = ref<boolean>(false)
 // 子组件
@@ -159,7 +187,7 @@ const handleEdit = (row: any) => {
 /** 删除 */
 const handleDelete = (row: any) => {
   proxy.$modal
-    .confirm(`正在删除：${row.label}，是否继续？`, "提示", {
+    .confirm(`正在删除：${row.name}，是否继续？`, "提示", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
@@ -170,7 +198,33 @@ const handleDelete = (row: any) => {
         findTree()
       })
     })
-    .catch(() => {})
+}
+
+// 格式化数据
+const formatter = (row: any, column: any, cellValue: any, index: number) => {
+  if (column.property === "isAttendance") {
+    switch (cellValue) {
+      case 0:
+        cellValue = "是"
+        break
+      case 1:
+        cellValue = "否"
+        break
+    }
+  } else if (column.property === "isRest") {
+    switch (cellValue) {
+      case 0:
+        cellValue = "是"
+        break
+      case 1:
+        cellValue = "否"
+        break
+    }
+  } else if (column.property === "type") {
+    let temp = typeOption.find((item) => item.value === cellValue)
+    temp ? (cellValue = temp.label) : cellValue
+  }
+  return cellValue
 }
 
 /** 初始化 */

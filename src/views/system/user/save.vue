@@ -102,7 +102,7 @@ const formRules = reactive({
 // 文件上传
 const fileList = ref<any>([])
 
-/** 查询详情 */
+/** 文件上传 */
 const updateFileList = (val: any) => {
   fileList.value = val
   console.log(val)
@@ -156,26 +156,4 @@ if (record && record.id) {
 }
 </script>
 
-<style lang="scss" scoped>
-.search-wrapper {
-  margin-bottom: 20px;
-  :deep(.el-card__body) {
-    padding-bottom: 2px;
-  }
-}
-
-.toolbar-wrapper {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.table-wrapper {
-  margin-bottom: 20px;
-}
-
-.pager-wrapper {
-  display: flex;
-  justify-content: flex-end;
-}
-</style>
+<style lang="scss" scoped></style>

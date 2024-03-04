@@ -1,10 +1,8 @@
 import { request } from "@/utils/service"
 import CommonApi from "@/api/common-api"
-import { ListResult, Model, ModelResult, PageParams, PageResult } from "./types"
 
-const BASE_API = "system-server/dictionary"
+const BASE_API = `system-server/orgManagement`
 const api = {
-  optionList: BASE_API + CommonApi.optionList,
   add: BASE_API + CommonApi.add,
   edit: BASE_API + CommonApi.edit,
   deleteById: BASE_API + CommonApi.deleteById,
@@ -22,18 +20,9 @@ export function findTreeApi(data: any) {
   })
 }
 
-/** 下拉列表 */
-export function optionListApi(params?: { parentCode?: string }) {
-  return request<ListResult>({
-    url: api.optionList,
-    method: "get",
-    params
-  })
-}
-
 /** 新增 */
-export function addApi(data: Model) {
-  return request({
+export function addApi(data: any) {
+  return request<any>({
     url: api.add,
     method: "post",
     data
@@ -41,8 +30,8 @@ export function addApi(data: Model) {
 }
 
 /** 编辑 */
-export function editApi(data: Model) {
-  return request({
+export function editApi(data: any) {
+  return request<any>({
     url: api.edit,
     method: "post",
     data
@@ -51,7 +40,7 @@ export function editApi(data: Model) {
 
 /** 删除 */
 export function deleteByIdApi(params: { modelId: string }) {
-  return request({
+  return request<any>({
     url: api.deleteById,
     method: "get",
     params
@@ -60,7 +49,7 @@ export function deleteByIdApi(params: { modelId: string }) {
 
 /** 详情 */
 export function findByIdApi(params: { modelId: string }) {
-  return request<ModelResult>({
+  return request<any>({
     url: api.findById,
     method: "get",
     params
@@ -68,8 +57,8 @@ export function findByIdApi(params: { modelId: string }) {
 }
 
 /** 分页查询 */
-export function findPageApi(data: PageParams) {
-  return request<PageResult>({
+export function findPageApi(data: any) {
+  return request<any>({
     url: api.findPage,
     method: "post",
     data

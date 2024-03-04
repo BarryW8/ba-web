@@ -27,6 +27,8 @@ import FileUpload from "@/components/FileUpload/index.vue"
 import ImageUpload from "@/components/ImageUpload/index.vue"
 // 图片预览组件
 import ImagePreview from "@/components/ImagePreview/index.vue"
+// 标题栏组件
+import TitleBar from "@/components/TitleBar/index.vue"
 
 const app = createApp(App)
 
@@ -44,6 +46,7 @@ app.component("Pagination", Pagination)
 app.component("FileUpload", FileUpload)
 app.component("ImageUpload", ImageUpload)
 app.component("ImagePreview", ImagePreview)
+app.component("TitleBar", TitleBar)
 
 app.use(store).use(router)
 router.isReady().then(() => {

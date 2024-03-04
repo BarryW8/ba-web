@@ -277,7 +277,7 @@ const handleAuthRole = () => {
 }
 
 /** 初始化 */
-console.log("###初始化")
+console.log("===初始化")
 findPage()
 </script>
 

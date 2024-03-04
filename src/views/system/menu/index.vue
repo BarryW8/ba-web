@@ -41,6 +41,7 @@
           highlight-current-row
           @row-click="rowClick"
         >
+          <el-table-column type="index" label="序号" width="70" align="center" />
           <el-table-column prop="menuName" label="菜单名称" width="150" align="center" />
           <el-table-column prop="icon" label="图标" align="center" width="100">
             <template #default="scope">
@@ -48,8 +49,8 @@
             </template>
           </el-table-column>
           <el-table-column prop="orderBy" label="排序" align="center" />
-          <el-table-column prop="menuCode" label="菜单标识" align="center" />
-          <el-table-column prop="perms" label="权限标识" align="center" />
+          <el-table-column prop="menuCode" label="菜单标识" align="center" show-overflow-tooltip />
+          <el-table-column prop="perms" label="权限标识" align="center" show-overflow-tooltip />
           <el-table-column prop="routePath" label="路由路径" align="center" show-overflow-tooltip />
           <el-table-column prop="pagePath" label="文件路径" align="center" show-overflow-tooltip />
           <el-table-column
@@ -221,8 +222,6 @@ const handleDelete = (row: any) => {
 
 // 格式化数据
 const formatter = (row: any, column: any, cellValue: any, index: number) => {
-  console.log(row.menuType)
-  console.log(cellValue)
   if (column.property === "menuType") {
     switch (cellValue) {
       case "M":
@@ -237,7 +236,7 @@ const formatter = (row: any, column: any, cellValue: any, index: number) => {
 }
 
 /** 初始化 */
-console.log("###初始化")
+console.log("===初始化")
 findTree()
 </script>
 

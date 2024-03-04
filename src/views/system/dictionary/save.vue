@@ -30,7 +30,7 @@
           />
         </el-form-item>
         <el-form-item prop="status" label="状态">
-          <el-select v-model="formData.status" placeholder="请输入" style="width: 100%">
+          <el-select v-model="formData.status" placeholder="请选择" style="width: 100%">
             <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -154,7 +154,7 @@ const save = (params: any) => {
 const hide = () => emit("hide")
 
 /** 初始化 */
-console.log("###初始化")
+console.log("===初始化")
 findTree()
 if (props.params.opt === "add") {
   if (record && record.id) {

@@ -86,7 +86,7 @@
               <el-input v-model="formData.routePath" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="formData.menuType === 'C'">
+          <el-col :span="12">
             <el-form-item prop="pagePath">
               <template #label>
                 <span>
@@ -358,26 +358,4 @@ if (props.params.opt === "add") {
 }
 </script>
 
-<style lang="scss" scoped>
-.search-wrapper {
-  margin-bottom: 20px;
-  :deep(.el-card__body) {
-    padding-bottom: 2px;
-  }
-}
-
-.toolbar-wrapper {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.table-wrapper {
-  margin-bottom: 20px;
-}
-
-.pager-wrapper {
-  display: flex;
-  justify-content: flex-end;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -79,6 +79,9 @@ const common = {
   menu2Tree(menus: any): any[] {
     const res: any[] = []
     let { levelOneList, levelTwoList } = menus
+    console.log("levelOneList---", levelOneList)
+    console.log("levelTwoList---", levelTwoList)
+
     levelOneList.forEach((menu1) => {
       // 目录
       menu1.children = []
@@ -87,8 +90,11 @@ const common = {
       levelTwoList.forEach((menu2) => {
         if (menu2.parentId === menu1.id) {
           menu1.children.push(menu2)
-        } else {
-          // 将没有父节点的菜单展示出来，方便修改
+          return
+        }
+        // 将没有父节点的菜单展示出来，方便修改
+        let index = levelOneList.findIndex((item) => menu2.parentId === item.id)
+        if (index === -1) {
           res.push(menu2)
         }
       })
