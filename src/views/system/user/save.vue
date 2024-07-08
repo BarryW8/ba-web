@@ -41,11 +41,29 @@
             <el-radio :label="0" border>女</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item prop="roleStatus" label="用户状态">
+        <el-form-item prop="userStatus" label="用户状态">
           <el-radio-group v-model="formData.userStatus">
             <el-radio :label="0" border>正常</el-radio>
             <el-radio :label="1" border>停用</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item prop="appType" label="应用类型">
+          <el-select
+            v-model="appTypeSelected"
+            multiple
+            filterable
+            clearable
+            placeholder="请选择"
+            popper-class="custom-header"
+            style="width: 100%"
+          >
+            <template #header>
+              <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
+                全选
+              </el-checkbox>
+            </template>
+            <el-option v-for="item in appTypes" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
         </el-form-item>
         <el-form-item prop="avatar" label="头像">
           <imageUpload v-model="fileList" limit="1" @updateFileList="updateFileList" />
@@ -84,23 +102,64 @@ const pageType = ref<string>(props.params.opt)
 const title = pageType.value === "add" ? "新增" : "编辑"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
+const checkAll = ref(false) // 全选
+const indeterminate = ref(false)
+const appTypeSelected = ref<any>([]) // 已选的应用类型
+const appTypes = ref([
+  {
+    value: "1",
+    label: "WEB"
+  },
+  {
+    value: "2",
+    label: "Thinking APP"
+  },
+  {
+    value: "3",
+    label: "小程序"
+  }
+])
 // 表单
 const formRef = ref<any>(null)
 const formData = reactive<any>({
   userName: "",
   telephone: "",
   email: "",
-  sex: ""
+  sex: "",
+  appType: ""
 })
 const formRules = reactive({
   userName: [{ required: true, trigger: "blur", message: "用户名不能为空" }],
   telephone: [
     { required: true, trigger: "blur", message: "手机号不能为空" },
     { min: 11, max: 11, trigger: "blur", message: "手机号不合法" }
-  ]
+  ],
+  appType: [{ required: true, trigger: "change", message: "应用类型不能为空" }]
 })
 // 文件上传
 const fileList = ref<any>([])
+
+watch(appTypeSelected, (val) => {
+  if (val.length === 0) {
+    checkAll.value = false
+    indeterminate.value = false
+  } else if (val.length === appTypes.value.length) {
+    checkAll.value = true
+    indeterminate.value = false
+  } else {
+    indeterminate.value = true
+  }
+})
+
+/** 应用类型 全选 */
+const handleCheckAll = (val: any) => {
+  indeterminate.value = false
+  if (val) {
+    appTypeSelected.value = appTypes.value.map((item) => item.value)
+  } else {
+    appTypeSelected.value = []
+  }
+}
 
 /** 文件上传 */
 const updateFileList = (val: any) => {
@@ -113,16 +172,19 @@ const findById = () => {
   findByIdApi({ modelId: record.id }).then((res) => {
     Object.assign(formData, res.data)
     if (res.data.avatar) fileList.value = JSON.parse(res.data.avatar)
+    if (res.data.appType) appTypeSelected.value = res.data.appType.split(",")
     console.log(fileList.value)
   })
 }
 
 /** 保存 */
 const handleSave = () => {
+  formData.appType = appTypeSelected.value.join(",")
   formRef.value.validate((valid: boolean) => {
     if (valid) {
       const params = Object.assign(formData, {
-        avatar: fileList.value.length ? JSON.stringify(fileList.value) : null
+        avatar: fileList.value.length ? JSON.stringify(fileList.value) : null,
+        appType: appTypeSelected.value.join(",")
       })
       save(params)
     } else {

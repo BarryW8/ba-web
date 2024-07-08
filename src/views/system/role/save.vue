@@ -22,6 +22,11 @@
             <el-radio :label="1" border>停用</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item prop="appType" label="应用类型">
+          <el-select v-model="formData.appType" filterable clearable placeholder="请选择" style="width: 100%">
+            <el-option v-for="item in appTypes" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
 
         <el-form-item label="菜单权限">
           <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand">展开/折叠</el-checkbox>
@@ -74,6 +79,20 @@ const pageType = ref<string>(props.params.opt)
 const title = pageType.value === "add" ? "新增" : "编辑"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
+const appTypes = ref([
+  {
+    value: 1,
+    label: "WEB"
+  },
+  {
+    value: 2,
+    label: "Thinking APP"
+  },
+  {
+    value: 3,
+    label: "小程序"
+  }
+])
 // 菜单树
 const treeRef = ref<any>(null)
 const permList = ref<any[]>([])
@@ -92,7 +111,8 @@ const formData = reactive<any>({
 const formRules = reactive({
   roleCode: [{ required: true, trigger: "blur", message: "角色编号不能为空" }],
   roleName: [{ required: true, trigger: "blur", message: "角色名称不能为空" }],
-  roleStatus: [{ required: true, trigger: "change", message: "角色状态不能为空" }]
+  roleStatus: [{ required: true, trigger: "change", message: "角色状态不能为空" }],
+  appType: [{ required: true, trigger: "change", message: "应用类型不能为空" }]
 })
 
 // 菜单树操作

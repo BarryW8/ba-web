@@ -29,7 +29,7 @@
     "axios": "1.4.0",
     "crypto-js": "^4.1.1",
     "dayjs": "1.11.8",
-    "element-plus": "2.3.6",
+    "element-plus": "2.4.3",
     "js-cookie": "3.0.5",
     "less": "^4.2.0",
     "lodash-es": "4.17.21",

@@ -7,6 +7,7 @@ export interface Model extends BasicModel {
   email?: string
   birthday?: Date
   sex: number | string
+  appType: string
 }
 
 export interface PageParams extends BasicPageParams {
