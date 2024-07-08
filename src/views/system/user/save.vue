@@ -140,6 +140,7 @@ const formRules = reactive({
 const fileList = ref<any>([])
 
 watch(appTypeSelected, (val) => {
+  formData.appType = val.join(",")
   if (val.length === 0) {
     checkAll.value = false
     indeterminate.value = false
@@ -179,12 +180,11 @@ const findById = () => {
 
 /** 保存 */
 const handleSave = () => {
-  formData.appType = appTypeSelected.value.join(",")
   formRef.value.validate((valid: boolean) => {
     if (valid) {
       const params = Object.assign(formData, {
-        avatar: fileList.value.length ? JSON.stringify(fileList.value) : null,
-        appType: appTypeSelected.value.join(",")
+        avatar: fileList.value.length ? JSON.stringify(fileList.value) : null
+        // appType: appTypeSelected.value.join(",")
       })
       save(params)
     } else {

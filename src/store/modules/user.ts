@@ -56,8 +56,8 @@ export const useUserStore = defineStore("user", () => {
     // _resetTagsView()
   }
   /** 登出 */
-  const logout = async () => {
-    await logoutApi()
+  const logout = () => {
+    logoutApi() // 不能await，会导致无法跳转至登录页
     removeToken()
     removeUserId()
     token.value = ""
