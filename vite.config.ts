@@ -45,7 +45,7 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
           rewrite: (path) => path.replace("/api/v1", "")
         },
         "/api/dev": {
-          target: "http://127.0.0.1:8888",
+          target: "http://127.0.0.1:7777",
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true,

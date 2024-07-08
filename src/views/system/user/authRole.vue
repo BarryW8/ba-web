@@ -9,31 +9,35 @@
       width="700"
       @close="hide"
     >
-      <div class="table-wrapper">
-        <el-table
-          ref="tableRef"
-          v-loading="loading"
-          :data="dataList"
-          border
-          row-key="id"
-          @select="handleSelect"
-          @select-all="handleSelectAll"
-          @row-click="rowClick"
-        >
-          <el-table-column type="selection" reserve-selection width="50" align="center" />
-          <el-table-column prop="roleCode" label="角色编号" align="center" />
-          <el-table-column prop="roleName" label="角色名称" align="center" />
-        </el-table>
-      </div>
-      <div class="pager-wrapper">
-        <pagination
-          :pageNum="paginationData.pageNum"
-          :pageSize="paginationData.pageSize"
-          :total="paginationData.total"
-          :hidden="!paginationData.total"
-          @pagination="findPage"
-        />
-      </div>
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tab-pane label="系统角色" :name="1">
+          <div class="table-wrapper">
+            <el-table
+              ref="tableRef"
+              v-loading="loading"
+              :data="dataList"
+              border
+              row-key="id"
+              @select="handleSelect"
+              @select-all="handleSelectAll"
+              @row-click="rowClick"
+            >
+              <el-table-column type="selection" reserve-selection width="50" align="center" />
+              <el-table-column prop="roleCode" label="角色编号" align="center" />
+              <el-table-column prop="roleName" label="角色名称" align="center" />
+            </el-table>
+          </div>
+          <div class="pager-wrapper">
+            <pagination
+              :pageNum="paginationData.pageNum"
+              :pageSize="paginationData.pageSize"
+              :total="paginationData.total"
+              :hidden="!paginationData.total"
+              @pagination="findPage"
+            />
+          </div>
+        </el-tab-pane>
+      </el-tabs>
       <template #footer>
         <el-button @click="hide">取消</el-button>
         <el-button type="primary" @click="save">确认</el-button>
@@ -68,10 +72,11 @@ const { paginationData } = usePagination()
 const dialogVisible = ref<boolean>(props.show)
 const loading = ref<boolean>(false)
 const title = "授权角色"
-const record = reactive(props.params.data)
+const record = reactive(props.params.data[0])
 const dataList = ref<any[]>([])
 const tableRef = ref<any>(null)
 const selectList = ref<any>([])
+const activeName = ref(1)
 // 查询条件
 const searchData = reactive({
   username: undefined,
@@ -82,10 +87,15 @@ const searchData = reactive({
 const selectIds = computed<string[]>(() => {
   const arr: string[] = []
   selectList.value.forEach((item: any) => {
-    arr.push(item.roleId)
+    arr.push(item.id)
   })
   return arr
 })
+
+/** 点击标签页 */
+const handleClick = (tab: any, event: Event) => {
+  console.log(tab, event)
+}
 
 /** 列表复选框 */
 // 点击行勾选复选框
@@ -138,6 +148,7 @@ const handleSelectAll = (selection: any[]) => {
 
 /** 查询已勾选记录 */
 const findUserRole = () => {
+  console.log("findUserRole", record.id)
   findUserRoleApi({ modelId: record.id }).then((res: any) => {
     if (res.data) {
       selectList.value.push(res.data)
