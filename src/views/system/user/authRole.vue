@@ -225,7 +225,8 @@ const save = () => {
   loading.value = true
   saveUserRoleApi({
     userId: record.id,
-    roleId: selectIds.value[0]
+    roleId: selectIds.value[0],
+    appType: activeName.value
   })
     .then(() => {
       proxy.$modal.msgSuccess("保存成功")

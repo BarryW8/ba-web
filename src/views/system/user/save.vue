@@ -62,7 +62,6 @@
                 全选
               </el-checkbox>
             </template>
-            <!-- <el-option v-for="item in appTypes" :key="item.value" :label="item.label" :value="item.value" /> -->
             <el-option v-for="item in AppTypeEnum" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -107,20 +106,6 @@ const loading = ref<boolean>(false)
 const checkAll = ref(false) // 全选
 const indeterminate = ref(false)
 const appTypeSelected = ref<any>([]) // 已选的应用类型
-const appTypes = ref([
-  {
-    value: "1",
-    label: "WEB"
-  },
-  {
-    value: "2",
-    label: "Thinking APP"
-  },
-  {
-    value: "3",
-    label: "小程序"
-  }
-])
 // 表单
 const formRef = ref<any>(null)
 const formData = reactive<any>({
