@@ -42,8 +42,19 @@
           @row-click="rowClick"
         >
           <el-table-column type="selection" reserve-selection width="50" align="center" />
+          <el-table-column prop="appType" label="应用类型" width="120" align="center">
+            <template #default="scope">
+              <el-tag
+                :type="EnumValue.getTypeByValue(AppTypeEnum, scope.row.appType)"
+                :color="EnumValue.getColorByValue(AppTypeEnum, scope.row.appType)"
+                effect="plain"
+              >
+                {{ EnumValue.getLabelByValue(AppTypeEnum, scope.row.appType) }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column prop="roleCode" label="角色编号" align="center" />
-          <el-table-column prop="roleName" label="角色名称" align="center" />
+          <el-table-column prop="roleName" label="角色名称" align="center" width="120" />
           <el-table-column prop="orderBy" label="排序" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template #default="scope">
@@ -89,6 +100,8 @@
 import { findPageApi, deleteByIdApi } from "@/api/system/role"
 import { usePagination } from "@/hooks/usePagination"
 import Save from "./save.vue"
+import { EnumValue } from "@/utils/enum-value"
+import { AppTypeEnum } from "@/utils/enums"
 
 const { proxy } = getCurrentInstance() as any
 const { paginationData } = usePagination()

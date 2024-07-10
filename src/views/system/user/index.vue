@@ -45,11 +45,11 @@
         >
           <el-table-column type="selection" reserve-selection width="50" align="center" />
           <el-table-column prop="userName" label="用户名" align="center" />
-          <el-table-column prop="roleName" label="所属角色" align="center">
+          <!-- <el-table-column prop="roleName" label="所属角色" align="center">
             <template #default="scope">
               <el-tag v-if="scope.row.roleName" type="warning" effect="plain">{{ scope.row.roleName }}</el-tag>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column prop="telephone" label="手机号" align="center" show-overflow-tooltip />
           <el-table-column prop="email" label="邮箱" align="center" show-overflow-tooltip />
           <el-table-column prop="userStatus" label="状态" width="100" align="center">
@@ -172,7 +172,8 @@ const rowClick = (row: any) => {
   }
 }
 // 勾选记录
-const handleSelect = (row: any) => {
+const handleSelect = (selection: any[], row: any) => {
+  console.log("---------selection", selection)
   console.log("---------row", row)
   if (selectIds.value.indexOf(row.id) > -1) {
     console.log("去勾")
@@ -271,8 +272,13 @@ const handleDelete = (row?: any) => {
 /** 授权角色 */
 const handleAuthRole = () => {
   if (proxy.$common.checkSingle(isSingle.value)) return
+  const record = selectList.value[0]
+  if (!record.appType) {
+    proxy.$modal.msgWarning("应用类型不能为空")
+    return
+  }
   authRoleVisible.value = true
-  subParams.data = selectList.value[0]
+  subParams.data = record
   subParams.opt = "edit"
 }
 

@@ -62,7 +62,8 @@
                 全选
               </el-checkbox>
             </template>
-            <el-option v-for="item in appTypes" :key="item.value" :label="item.label" :value="item.value" />
+            <!-- <el-option v-for="item in appTypes" :key="item.value" :label="item.label" :value="item.value" /> -->
+            <el-option v-for="item in AppTypeEnum" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item prop="avatar" label="头像">
@@ -79,6 +80,7 @@
 
 <script lang="ts" setup>
 import { addApi, editApi, findByIdApi } from "@/api/system/user"
+import { AppTypeEnum } from "@/utils/enums"
 
 const props = withDefaults(
   defineProps<{
@@ -144,7 +146,7 @@ watch(appTypeSelected, (val) => {
   if (val.length === 0) {
     checkAll.value = false
     indeterminate.value = false
-  } else if (val.length === appTypes.value.length) {
+  } else if (val.length === Object.values(AppTypeEnum).length) {
     checkAll.value = true
     indeterminate.value = false
   } else {
@@ -156,7 +158,7 @@ watch(appTypeSelected, (val) => {
 const handleCheckAll = (val: any) => {
   indeterminate.value = false
   if (val) {
-    appTypeSelected.value = appTypes.value.map((item) => item.value)
+    appTypeSelected.value = Object.values(AppTypeEnum).map((item) => item.value)
   } else {
     appTypeSelected.value = []
   }
@@ -173,7 +175,7 @@ const findById = () => {
   findByIdApi({ modelId: record.id }).then((res) => {
     Object.assign(formData, res.data)
     if (res.data.avatar) fileList.value = JSON.parse(res.data.avatar)
-    if (res.data.appType) appTypeSelected.value = res.data.appType.split(",")
+    if (res.data.appType) appTypeSelected.value = res.data.appType.split(",").map(Number) // 转成数字数组
     console.log(fileList.value)
   })
 }

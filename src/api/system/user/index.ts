@@ -10,15 +10,15 @@ const api = {
   findById: BASE_API + CommonApi.findById,
   findPage: BASE_API + CommonApi.findPage,
   findUserRole: BASE_API + "/findUserRole",
-  saveUserRole: BASE_API + "/saveUserRole",
+  saveUserRole: BASE_API + "/saveUserRole"
 }
 
 /** 查询用户授权角色信息 */
-export function findUserRoleApi(params: { modelId: string }) {
+export function findUserRoleApi(data: any) {
   return request({
     url: api.findUserRole,
-    method: "get",
-    params
+    method: "post",
+    data
   })
 }
 

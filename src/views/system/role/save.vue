@@ -24,7 +24,7 @@
         </el-form-item>
         <el-form-item prop="appType" label="应用类型">
           <el-select v-model="formData.appType" filterable clearable placeholder="请选择" style="width: 100%">
-            <el-option v-for="item in appTypes" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in AppTypeEnum" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
 
@@ -56,6 +56,7 @@
 <script lang="ts" setup>
 import { addApi, editApi, findByIdApi } from "@/api/system/role"
 import { findTreePermsApi } from "@/api/system/menu"
+import { AppTypeEnum } from "@/utils/enums"
 
 const props = withDefaults(
   defineProps<{
@@ -79,20 +80,6 @@ const pageType = ref<string>(props.params.opt)
 const title = pageType.value === "add" ? "新增" : "编辑"
 const record = reactive(props.params.data)
 const loading = ref<boolean>(false)
-const appTypes = ref([
-  {
-    value: 1,
-    label: "WEB"
-  },
-  {
-    value: 2,
-    label: "Thinking APP"
-  },
-  {
-    value: 3,
-    label: "小程序"
-  }
-])
 // 菜单树
 const treeRef = ref<any>(null)
 const permList = ref<any[]>([])
